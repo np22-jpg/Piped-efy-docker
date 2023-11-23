@@ -1,4 +1,4 @@
 [submodule "Piped"]
 	path = Piped
-	url = https://github.com/TeamPiped/Piped.git
-	branch = efy
+	url = https://github.com/np22-jpg/Piped.git
+	branch = main
