@@ -17,7 +17,7 @@ index 5192669b..71e95011 100644
 +    border-radius: 50%;
 +    box-shadow: rgba(0 0 0 / 10%) 0 0 0px 0;
 +    border: none;
-+    background-size: 70%;
++    background-size: 40%;
 +    background-repeat: no-repeat;
 +    background-position: center center;
 +    background-color: rgba(255 255 255 / 0%);
