@@ -1,0 +1,81 @@
+name: Build and Test Docker Images
+
+on:
+  pull_request:
+    branches: [ "main" ]
+  push:
+    branches: [ "main" ]
+  schedule:
+    - cron: '20 03 * * *'  # 3:20am everyday
+
+jobs:
+  build_and_push_docker_images:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      security-events: write
+
+    name: Docker Images
+    steps:
+
+      # SETUP
+
+      - name: Check out the repo
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        with:
+            submodules: recursive
+
+      # PREPARE
+
+      - name: Get patches
+        run: |
+          chmod u+x scripts/*
+          ./scripts/apply-patches.sh 
+
+      # BUILD
+
+      - name: Build Image
+        id: build-image
+        uses: redhat-actions/buildah-build@b4dc19b4ba891854660ab1f88a097d45aa158f76 # v2
+        with:
+          image: piped
+          tags: latest
+          containerfiles: Piped/Dockerfile
+          context: Piped
+
+      # PUSH
+
+      - name: Push To GHCR
+        if: github.event_name != 'pull_request'
+        id: push-to-ghcr
+        uses: redhat-actions/push-to-registry@9986a6552bc4571882a4a67e016b17361412b4df # v2
+        with:
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+          image: ${{ steps.build-image.outputs.image }}
+          tags: ${{ steps.build-image.outputs.tags }}
+          registry: ghcr.io/${{ github.repository_owner }}
+
+      # SCAN
+
+      - name: Run Trivy vulnerability scanner
+        if: github.event_name != 'pull_request'
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ghcr.io/${{ github.repository_owner }}/${{ steps.build-image.outputs.image }}@${{ steps.push-to-ghcr.outputs.digest }}
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        if: github.event_name != 'pull_request'
+        uses: github/codeql-action/upload-sarif@689fdc5193eeb735ecb2e52e819e3382876f93f4 # v2
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+      # PRINT
+
+      - name: Print image URLs
+        if: github.event_name != 'pull_request'
+        run:  |
+          echo "Image pushed to ${{ steps.push-to-ghcr.outputs.registry-paths }}"

@@ -1,0 +1,15 @@
+diff --git a/.dockerignore b/.dockerignore
+index ab2a8d67..3eb61a3e 100644
+--- a/.dockerignore
++++ b/.dockerignore
+@@ -1,6 +1,9 @@
+ node_modules/
+ dist/
+ .git/
+-.*
++.gitignore
++.gitmodules
++.prettierignore
++.prettierrc.json
+ *.md
+ !.prettier*
