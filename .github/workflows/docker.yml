@@ -28,6 +28,19 @@ jobs:
 
       # PREPARE
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+            version: latest
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+            cache: "pnpm"
+      - run: pnpm install
+      - run: pnpm build && ./localizefonts.sh && mv dist/ dist-ci/
+
+      # PATCH
+
       - name: Get patches
         run: |
           chmod u+x scripts/*
