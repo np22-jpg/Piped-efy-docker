@@ -28,6 +28,9 @@ jobs:
 
       # PREPARE
 
+      - name: Copy pnpm package files
+        run: cp Piped/pnpm-lock.yaml Piped/package.json .
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
