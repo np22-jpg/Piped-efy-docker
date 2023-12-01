@@ -12,7 +12,7 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 RUN pnpm install && \
     pnpm build
 
-FROM nginx:alpine-slim@sha256:d45f4c998198583de669cd0ea8ab819ab344d57d6bf42b6f121d0ec097a032e8
+FROM nginx:alpine-slim@sha256:4716bad84614d17f0159a769c337c00aae1c62100583bcf8b72b76e6861daea4
 
 COPY --from=build /app/dist/ /usr/share/nginx/html/
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
