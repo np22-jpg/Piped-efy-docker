@@ -15,11 +15,12 @@ RUN pnpm install && \
 FROM registry.access.redhat.com/ubi9/nginx-122@sha256:8835e45b874bc92650b1f8faf23f5c525c8ca4ebbf6b5e97d58c084cfc5a099a AS release
 
 COPY --from=build /app/dist/ /tmp/src/
-# COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 
 # Let the assemble script to install the dependencies
 RUN /usr/libexec/s2i/assemble
 
+RUN sed -i s/pipedapi.kavin.rocks/pipedapi.nolanpoe.me/g ${APP_ROOT}/src/assets/*
+
 EXPOSE 8080
 # Run script uses standard ways to run the application
-CMD /usr/libexec/s2i/run
+CMD [ "/usr/libexec/s2i/run" ]
