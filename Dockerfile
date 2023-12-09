@@ -1,20 +1,25 @@
-FROM node:lts-alpine@sha256:32427bc0620132b2d9e79e405a1b27944d992501a20417a7f407427cc4c2b672 AS build
+FROM registry.access.redhat.com/ubi9/nodejs-20@sha256:399418ca8d804ee6a7a96a0fb58d6b4a7318da427b0d61a3d6b0bb3ad964ab31 AS build
 
 WORKDIR /app/
 
-RUN apk add --no-cache \
-    curl
-
 COPY . .
 
-RUN corepack enable && corepack prepare pnpm@latest --activate
+USER 0
+RUN npm install -g pnpm && \
+    chown -R 1001:0 /app/
 
+USER 1001
 RUN pnpm install && \
     pnpm build
 
-FROM nginx:alpine-slim@sha256:6af140b2ad5a495d3d9e1293a0b4dc74f2a14f6425f9e3faafe0c87b12097d7c
+FROM registry.access.redhat.com/ubi9/nginx-122@sha256:8835e45b874bc92650b1f8faf23f5c525c8ca4ebbf6b5e97d58c084cfc5a099a AS release
 
-COPY --from=build /app/dist/ /usr/share/nginx/html/
-COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/dist/ /tmp/src/
+# COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 
-EXPOSE 80
+# Let the assemble script to install the dependencies
+RUN /usr/libexec/s2i/assemble
+
+EXPOSE 8080
+# Run script uses standard ways to run the application
+CMD /usr/libexec/s2i/run
