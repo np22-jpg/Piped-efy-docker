@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi9/nodejs-20@sha256:399418ca8d804ee6a7a96a0fb58d6b4a7318da427b0d61a3d6b0bb3ad964ab31 AS build
+FROM  quay.io/sclorg/nodejs-20-c9s@sha256:f2be8611e0fb224728456bfe703bb631de8e1b8dc7200f5a8a9996a9eb3ed11e AS build
 
 WORKDIR /app/
 
@@ -12,15 +12,13 @@ USER 1001
 RUN pnpm install && \
     pnpm build
 
-FROM registry.access.redhat.com/ubi9/nginx-122@sha256:8835e45b874bc92650b1f8faf23f5c525c8ca4ebbf6b5e97d58c084cfc5a099a AS release
+FROM quay.io/sclorg/nginx-122-micro-c9s@sha256:0e439a1adf335ad087deb7583fc227cb991e4f4dfeb86d2bac03eddcd8d8eeb8
 
-COPY --from=build /app/dist/ /tmp/src/
+COPY --from=build --chown=nginx /app/dist /tmp/src
+# ADD --chown=998:996 docker/nginx.conf  /tmp/src/nginx-cfg/site.conf
 
 # Let the assemble script to install the dependencies
 RUN /usr/libexec/s2i/assemble
 
-RUN sed -i s/pipedapi.kavin.rocks/pipedapi.nolanpoe.me/g ${APP_ROOT}/src/assets/*
-
-EXPOSE 8080
 # Run script uses standard ways to run the application
-CMD [ "/usr/libexec/s2i/run" ]
+CMD /usr/libexec/s2i/run
