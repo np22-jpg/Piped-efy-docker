@@ -31,6 +31,7 @@ jobs:
       - name: Get patches
         run: |
           chmod u+x scripts/*
+          ./scripts/login.sh 
           ./scripts/apply-patches.sh 
 
       # BUILD
