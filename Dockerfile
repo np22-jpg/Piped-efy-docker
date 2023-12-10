@@ -15,7 +15,7 @@ RUN pnpm install && \
 FROM quay.io/sclorg/nginx-122-micro-c9s@sha256:0e439a1adf335ad087deb7583fc227cb991e4f4dfeb86d2bac03eddcd8d8eeb8
 
 COPY --from=build --chown=nginx /app/dist /tmp/src
-ADD --chown=nginx docker/nginx.conf  /tmp/src/nginx-cfg/site.conf
+ADD --chown=nginx docker/nginx.conf  /tmp/src/nginx.conf
 
 # Let the assemble script to install the dependencies
 RUN /usr/libexec/s2i/assemble
