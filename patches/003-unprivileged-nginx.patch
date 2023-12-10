@@ -1,24 +1,19 @@
 diff --git a/docker/nginx.conf b/docker/nginx.conf
-index 3b7ef86b..f3f7ae23 100644
+index 3b7ef86b..b8b15183 100644
 --- a/docker/nginx.conf
 +++ b/docker/nginx.conf
-@@ -1,13 +1,10 @@
+@@ -1,11 +1,10 @@
  server {
 -    listen 80;
 -    listen [::]:80;
--    server_name localhost;
++    listen 8080;
++    listen [::]:8080;
+     server_name localhost;
 -    error_log off;
-+	listen 8080;
-+	server_name localhost;
  
      location / {
 -        root /usr/share/nginx/html;
--        index index.html index.htm;
-+	    root /opt/app-root/src;
-+	    index index.html;
++        root /opt/app-root/src;
+         index index.html index.htm;
      }
--
-     error_page 404 =200 /index.html;
--}
-+}
-\ No newline at end of file
+ 
