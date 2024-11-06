@@ -1,4 +1,4 @@
-FROM  quay.io/sclorg/nodejs-20-c9s@sha256:127fec1a2dc6f8888c4dd3e968b6ed1614d8cca88dd829b7d3314aa9cd493553 AS build
+FROM  quay.io/sclorg/nodejs-20-c9s@sha256:fec0423e08e519abccc57eb9262e99ca8c7a6810a917935ab5e7a9df4291c270 AS build
 
 WORKDIR /app/
 
