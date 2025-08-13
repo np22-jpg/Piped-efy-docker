@@ -18,8 +18,8 @@
   "git-submodules": {
     "enabled": true,
     "versioning": "git",
-    "fileMatch": [
-      "(^|/)\\.gitmodules$"
+    "managerFilePatterns": [
+      "/(^|/)\\.gitmodules$/"
     ],
     "automerge": true
   },
