@@ -12,7 +12,7 @@ USER 1001
 RUN pnpm install && \
     pnpm build
 
-FROM quay.io/sclorg/nginx-122-micro-c9s@sha256:c43011e720c842563561f2bf63c91c8b19fecf4c780a4b6d3e1db9a664652671
+FROM quay.io/sclorg/nginx-122-micro-c9s@sha256:7735fe281257b0ad03d80379f84f54b23b11cc027b52717ccaecb9d111f10f03
 
 COPY --from=build --chown=nginx /app/dist /tmp/src
 ADD --chown=nginx docker/nginx.conf  /tmp/src/nginx.conf
