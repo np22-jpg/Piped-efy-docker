@@ -62,7 +62,7 @@ jobs:
 
       - name: Run Trivy vulnerability scanner
         if: github.event_name != 'pull_request'
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@bfa4b33a029b9aa80ddb784b45574c30e072c59e # master
         with:
           image-ref: ghcr.io/${{ github.repository_owner }}/${{ steps.build-image.outputs.image }}@${{ steps.push-to-ghcr.outputs.digest }}
           format: 'sarif'
